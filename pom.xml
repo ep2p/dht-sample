@@ -52,9 +52,14 @@
 		<dependency>
 			<groupId>com.github.ep2p</groupId>
 			<artifactId>kademlia-api</artifactId>
-			<version>1.2.0-SNAPSHOT</version>
+			<version>1.2.1-SNAPSHOT</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.idioglossia</groupId>
+			<artifactId>java-row-client</artifactId>
+			<version>0.4.2-SNAPSHOT</version>
+		</dependency>
 
 	</dependencies>
 
