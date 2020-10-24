@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class StoreResultRequest extends BasicResponse {
     private Integer key;
+    private boolean success;
 
     public StoreResultRequest(Node<ROWConnectionInfo> node) {
         super(node);

@@ -82,7 +82,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
 
     @Override
     public FindNodeAnswer<ROWConnectionInfo> findNode(Node<ROWConnectionInfo> caller, Node<ROWConnectionInfo> node, Integer nodeId) {
-        RowRequest<FindNodeRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.PUT, "/dht/find", null, new FindNodeRequest(caller, nodeId), new HashMap<>());
+        RowRequest<FindNodeRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/find", null, new FindNodeRequest(caller, nodeId), new HashMap<>());
         FindNodeAnswer<ROWConnectionInfo> defaultAnswer = new FindNodeAnswer<ROWConnectionInfo>(0);
         defaultAnswer.setAlive(false);
         AtomicReference<FindNodeAnswer<ROWConnectionInfo>> responseAtomicAnswer = new AtomicReference<>(defaultAnswer);
@@ -186,6 +186,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
     public <K> void sendStoreResults(Node<ROWConnectionInfo> caller, Node<ROWConnectionInfo> requester, K key, boolean success) {
         StoreResultRequest storeResultRequest = new StoreResultRequest(caller);
         storeResultRequest.setKey(getKey(key));
+        storeResultRequest.setSuccess(success);
         RowRequest<StoreResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/store/result", null, storeResultRequest, new HashMap<>());
         try {
             rowConnectionPool.getClient(requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {

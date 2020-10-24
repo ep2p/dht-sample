@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GetRequest extends BasicResponse {
+public class GetRequest extends BasicRequest {
     private Node<ROWConnectionInfo> requester;
     private Integer key;
 
