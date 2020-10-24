@@ -1,30 +1,51 @@
 package com.github.ep2p.dht.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ep2p.dht.model.ROWConnectionInfo;
 import lab.idioglossia.row.client.RowClient;
 import lab.idioglossia.row.client.callback.RowTransportListener;
 import lab.idioglossia.row.client.tyrus.RowClientConfig;
 import lab.idioglossia.row.client.tyrus.TyrusRowWebsocketClient;
+import lab.idioglossia.row.client.util.DefaultJacksonMessageConverter;
+import lab.idioglossia.row.client.ws.HandshakeHeadersProvider;
 import lab.idioglossia.row.client.ws.RowWebsocketSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.websocket.CloseReason;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
 public class RowConnectionPool {
+    private final ObjectMapper objectMapper;
     private final Map<String, RowClient> pool = new ConcurrentHashMap<>();
     private final Listener listener = new Listener();
+
+    @Autowired
+    public RowConnectionPool(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public synchronized RowClient getClient(ROWConnectionInfo rowConnectionInfo){
         if(pool.containsKey(rowConnectionInfo.getFullAddress())){
             return pool.get(rowConnectionInfo.getFullAddress());
         }else {
             RowClient rowClient = new TyrusRowWebsocketClient(RowClientConfig.builder()
+                    .messageConverter(new DefaultJacksonMessageConverter(objectMapper))
+                    .handshakeHeadersProvider(new HandshakeHeadersProvider() {
+                        @Override
+                        public Map<String, List<String>> getHeaders() {
+                            Map<String, List<String>> map = new HashMap<>();
+                            map.put("Sec-WebSocket-Protocol", Collections.singletonList("row-protocol"));
+                            return map;
+                        }
+                    })
                     .address(rowConnectionInfo.getFullAddress())
                     .rowTransportListener(listener)
                     .build());

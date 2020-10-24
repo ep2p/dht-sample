@@ -5,6 +5,7 @@ import com.github.ep2p.dht.service.DHTRepository;
 import com.github.ep2p.dht.service.ROWNodeConnectionApi;
 import com.github.ep2p.kademlia.node.KademliaRepository;
 import com.github.ep2p.kademlia.node.KademliaSyncRepositoryNode;
+import com.github.ep2p.kademlia.node.RedistributionKademliaNodeListener;
 import com.github.ep2p.kademlia.table.RoutingTable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -36,7 +37,9 @@ public class KademliaConfig {
     @Bean
     @DependsOn({"rowNodeConnectionApi", "kademliaRepository", "rowConnectionInfo"})
     public KademliaSyncRepositoryNode<ROWConnectionInfo, Integer, String> kademliaSyncRepositoryNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Integer, String> kademliaRepository){
-        return new KademliaSyncRepositoryNode<>(nodeId, new RoutingTable<>(nodeId), rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
+        KademliaSyncRepositoryNode<ROWConnectionInfo, Integer, String> node = new KademliaSyncRepositoryNode<>(nodeId, new RoutingTable<>(nodeId), rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
+        node.setKademliaNodeListener(new RedistributionKademliaNodeListener<>());
+        return node;
     }
 
 }

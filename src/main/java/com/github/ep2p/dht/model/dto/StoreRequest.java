@@ -1,5 +1,6 @@
 package com.github.ep2p.dht.model.dto;
 
+import com.github.ep2p.dht.model.NodeDtoUtil;
 import com.github.ep2p.dht.model.ROWConnectionInfo;
 import com.github.ep2p.kademlia.node.Node;
 import lombok.Getter;
@@ -18,7 +19,11 @@ public class StoreRequest extends BasicRequest {
 
     public StoreRequest(Node<ROWConnectionInfo> caller, Node<ROWConnectionInfo> requester) {
         super(caller);
-        this.requester = requester;
+        this.requester = NodeDtoUtil.getCopyNode(requester);
+    }
+
+    public void setRequester(Node<ROWConnectionInfo> requester) {
+        this.requester = NodeDtoUtil.getCopyNode(requester);
     }
 
     public StoreRequest() {

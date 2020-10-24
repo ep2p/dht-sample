@@ -1,2 +1,7 @@
 logging:
-  level: error
+  level:
+    ROOT: error
+row:
+  enable: true
+  ws:
+    enable: true

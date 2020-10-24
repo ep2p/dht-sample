@@ -2,15 +2,13 @@ package com.github.ep2p.dht.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.ep2p.kademlia.connection.ConnectionInfo;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class ROWConnectionInfo implements ConnectionInfo {
     private String address;
     private int port;

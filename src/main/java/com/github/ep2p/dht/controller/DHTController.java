@@ -4,7 +4,6 @@ import com.github.ep2p.dht.model.ROWConnectionInfo;
 import com.github.ep2p.dht.model.dto.*;
 import com.github.ep2p.kademlia.exception.NodeIsOfflineException;
 import com.github.ep2p.kademlia.model.FindNodeAnswer;
-import com.github.ep2p.kademlia.model.PingAnswer;
 import com.github.ep2p.kademlia.node.KademliaSyncRepositoryNode;
 import lab.idioglossia.row.annotations.RowController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,8 @@ public class DHTController {
 
     @PutMapping("/dht/ping")
     public @ResponseBody
-    PingAnswer onPing(@RequestBody BasicRequest basicRequest) throws NodeIsOfflineException {
-        return kademliaSyncRepositoryNode.onPing(basicRequest.getCaller());
+    PingResponse onPing(@RequestBody BasicRequest basicRequest) throws NodeIsOfflineException {
+        return new PingResponse(kademliaSyncRepositoryNode, kademliaSyncRepositoryNode.onPing(basicRequest.getCaller()));
     }
 
     @PostMapping("/dht/shutdown-signal")

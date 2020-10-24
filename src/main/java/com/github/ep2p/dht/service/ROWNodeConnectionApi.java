@@ -21,7 +21,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-@Service
+@Service("rowNodeConnectionApi")
 @Slf4j
 public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo> {
     private final RowConnectionPool rowConnectionPool;
@@ -38,10 +38,10 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
         CountDownLatch latch = new CountDownLatch(1);
         try {
             RowClient client = rowConnectionPool.getClient(node.getConnectionInfo());
-            client.sendRequest(request, new ResponseCallback<BasicRequest>(BasicRequest.class) {
+            client.sendRequest(request, new ResponseCallback<PingResponse>(PingResponse.class) {
                 @Override
-                public void onResponse(RowResponse<BasicRequest> rowResponse) {
-                    responseAtomicAnswer.set(new PingAnswer(node.getId(), true));
+                public void onResponse(RowResponse<PingResponse> rowResponse) {
+                    responseAtomicAnswer.set(rowResponse.getBody().getPingAnswer());
                     latch.countDown();
                 }
 
@@ -166,7 +166,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
         GetResultRequest getResultRequest = new GetResultRequest(caller);
         getResultRequest.setKey(getKey(key));
         getResultRequest.setValue(getValue(value));
-        RowRequest<GetResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/get/results", null, getResultRequest, new HashMap<>());
+        RowRequest<GetResultRequest, Void> request = new RowRequest<>(RowRequest.RowMethod.POST, "/dht/get/result", null, getResultRequest, new HashMap<>());
         try {
             rowConnectionPool.getClient(requester.getConnectionInfo()).sendRequest(request, new ResponseCallback<BasicResponse>(BasicResponse.class) {
                 @Override
@@ -176,7 +176,8 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
 
                 @Override
                 public void onError(Throwable throwable) {
-
+                    throwable.printStackTrace();
+                    log.error("Failed to send get results to " + requester.getId() );
                 }
             });
         } catch (IOException e){
