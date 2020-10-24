@@ -118,6 +118,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
     //not async yet
     @Override
     public <K, V> void storeAsync(Node<ROWConnectionInfo> caller, Node<ROWConnectionInfo> requester, Node<ROWConnectionInfo> node, K key, V value) {
+        System.out.println("Storing " + key + " on " + node.getId());
         StoreRequest storeRequest = new StoreRequest(caller, requester);
         storeRequest.setKey(getKey(key));
         storeRequest.setValue(getValue(value));
