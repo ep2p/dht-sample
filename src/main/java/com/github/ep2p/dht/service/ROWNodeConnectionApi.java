@@ -11,6 +11,7 @@ import lab.idioglossia.row.client.RowClient;
 import lab.idioglossia.row.client.callback.ResponseCallback;
 import lab.idioglossia.row.client.model.RowRequest;
 import lab.idioglossia.row.client.model.RowResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@Slf4j
 public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo> {
     private final RowConnectionPool rowConnectionPool;
 
@@ -55,7 +57,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
         try {
             latch.await(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("Failed send request", e);
         }
         return responseAtomicAnswer.get();
     }
@@ -76,7 +78,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
                 }
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed send request", e);
         }
     }
 
@@ -103,12 +105,12 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
             });
         } catch (IOException e) {
             latch.countDown();
-            e.printStackTrace();
+            log.error("Failed send request", e);
         }
         try {
             latch.await(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("Timeout", e);
         }
         return responseAtomicAnswer.get();
     }
@@ -133,7 +135,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(new StoreException(e));
+            log.error("Failed send request", e);
         }
     }
 
@@ -155,7 +157,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(new StoreException(e));
+            log.error("Failed send request", e);
         }
     }
 
@@ -178,7 +180,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
                 }
             });
         } catch (IOException e){
-            throw new RuntimeException(e);
+            log.error("Failed send request", e);
         }
     }
 
@@ -201,7 +203,7 @@ public class ROWNodeConnectionApi implements NodeConnectionApi<ROWConnectionInfo
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("Failed send request", e);
         }
     }
 
