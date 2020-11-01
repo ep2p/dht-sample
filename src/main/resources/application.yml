@@ -5,3 +5,5 @@ row:
   enable: true
   ws:
     enable: true
+  client:
+    enable: true

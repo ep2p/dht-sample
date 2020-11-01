@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.ep2p.kademlia.node.ExternalNode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class AppConfig {
 
     @Bean
+    @Primary
     public ObjectMapper objectMapper(){
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

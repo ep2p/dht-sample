@@ -44,7 +44,7 @@ public class KademliaConfig {
     @DependsOn({"rowNodeConnectionApi", "kademliaRepository", "rowConnectionInfo"})
     public KademliaSyncRepositoryNode<ROWConnectionInfo, Integer, String> kademliaSyncRepositoryNode(ROWNodeConnectionApi rowNodeConnectionApi, ROWConnectionInfo rowConnectionInfo, KademliaRepository<Integer, String> kademliaRepository){
         KademliaSyncRepositoryNode<ROWConnectionInfo, Integer, String> node = new KademliaSyncRepositoryNode<>(nodeId, new RoutingTable<>(nodeId), rowNodeConnectionApi, rowConnectionInfo, kademliaRepository);
-        node.setKademliaNodeListener(new RedistributionKademliaNodeListener<>(new RedistributionKademliaNodeListener.ShutdownDistributionListener<ConnectionInfo>() {
+        node.setKademliaNodeListener(new RedistributionKademliaNodeListener<>(true, new RedistributionKademliaNodeListener.ShutdownDistributionListener<ConnectionInfo>() {
             @Override
             public void onFinish(KademliaNode<ConnectionInfo> kademliaNode) {
 

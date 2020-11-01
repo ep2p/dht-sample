@@ -14,6 +14,11 @@ public class ROWConnectionInfo implements ConnectionInfo {
     private int port;
 
     @JsonIgnore
+    public String getHttpAddress() {
+        return "http://"+ address + ":" + port;
+    }
+
+    @JsonIgnore
     public String getFullAddress(){
         return "ws://"+address+":"+port+"/ws";
     }

@@ -44,7 +44,7 @@ public class ManagerController {
     public @ResponseBody String store(@RequestBody ManagerStore managerStore){
         try {
             StoreAnswer<Integer> storeAnswer = this.kademliaSyncRepositoryNode.store(managerStore.getKey(), managerStore.getValue(), 10, TimeUnit.SECONDS);
-            return storeAnswer.getNodeId() + " STORED DATA";
+            return "Node #"+ storeAnswer.getNodeId() + " STORED DATA";
         } catch (StoreException | InterruptedException e) {
             e.printStackTrace();
             return "Failed to store: " + e.getMessage();
@@ -55,7 +55,7 @@ public class ManagerController {
     public @ResponseBody String get(@PathVariable Integer key){
         try {
             GetAnswer<Integer, String> getAnswer = this.kademliaSyncRepositoryNode.get(key, 10, TimeUnit.SECONDS);
-            return getAnswer.getNodeId() + " GOT DATA: " + getAnswer.getValue();
+            return "Node #"+getAnswer.getNodeId() + " GOT DATA: " + getAnswer.getValue();
         } catch (GetException e) {
             e.printStackTrace();
             return "Failed to get: " + e.getMessage();
